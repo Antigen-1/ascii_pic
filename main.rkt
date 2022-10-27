@@ -1,5 +1,5 @@
 #lang racket
-(require racket/draw)
+(require racket/draw sugar/cache)
 (provide (all-from-out racket/draw) make-ascii-pic ascii-table simply-make-ascii-pic)
 
 (define/contract ascii-table (parameter/c bytes?) (make-parameter #"abcdefghijklmnopqrstuvwxyz!@#$%^&*()-_ "))
@@ -19,8 +19,9 @@
   (lambda ()
     (let ((t (ascii-table)))
       (define gap (/ 256 (bytes-length t)))
-      (lambda (bytes)
-        (bytes-ref t (exact-floor (/ (get-grey-value bytes) gap)))))))
+      (make-caching-proc
+       (lambda (bytes)
+         (bytes-ref t (exact-floor (/ (get-grey-value bytes) gap))))))))
 
 (define/contract make-ascii-pic
   (-> exact-nonnegative-integer? exact-nonnegative-integer? exact-nonnegative-integer? exact-nonnegative-integer? (is-a?/c bitmap%) bytes?)
