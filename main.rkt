@@ -6,7 +6,7 @@
 
 (define get-pixel
   (lambda (x y w h bitmap)
-    (let ((color (make-bytes)))
+    (let ((color (make-bytes 4)))
       (send bitmap get-argb-pixels x y w h color)
       ;;ignore the alpha value
       (subbytes color 1))))
