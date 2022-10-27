@@ -31,7 +31,7 @@
       (let loop ((pixels pixels) (x 0) (byte-list null))
         (cond
           ((bytes=? pixels #"") (list->bytes (reverse byte-list)))
-          ((> x width) (loop pixels 0 (cons 10 byte-list)))
+          ((= x width) (loop pixels 0 (cons 10 byte-list)))
           (else (loop (subbytes pixels 4) (add1 x) (cons (proc (subbytes pixels 1 4)) byte-list))))))))
 
 (define/contract simply-make-ascii-pic
