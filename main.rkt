@@ -1,8 +1,9 @@
 #lang racket
 (require racket/draw sugar/cache)
-(provide (all-from-out racket/draw) make-ascii-pic ascii-table simply-make-ascii-pic)
+(provide (all-from-out racket/draw) make-ascii-pic ascii-table simply-make-ascii-pic factor)
 
 (define/contract ascii-table (parameter/c bytes?) (make-parameter #"abcdefghijklmnopqrstuvwxyz!@#$%^&*()-_ "))
+(define/contract factor (parameter/c exact-positive-integer?) (make-parameter 2))
 
 (define get-pixels
   (lambda (x y w h bitmap)
@@ -27,12 +28,13 @@
   (-> exact-nonnegative-integer? exact-nonnegative-integer? exact-nonnegative-integer? exact-nonnegative-integer? (is-a?/c bitmap%) bytes?)
   (lambda (start-x start-y width height bitmap)
     (let ((proc (create-handler))
-          (pixels (get-pixels start-x start-y width height bitmap)))
+          (pixels (get-pixels start-x start-y width height bitmap))
+          (factor (factor)))
       (let loop ((pixels pixels) (x 0) (byte-list null))
         (cond
           ((bytes=? pixels #"") (list->bytes (reverse byte-list)))
           ((= x width) (loop pixels 0 (cons 10 byte-list)))
-          (else (loop (subbytes pixels 4) (add1 x) (cons (proc (subbytes pixels 1 4)) byte-list))))))))
+          (else (loop (subbytes pixels 4) (add1 x) (append (make-list factor (proc (subbytes pixels 1 4))) byte-list))))))))
 
 (define/contract simply-make-ascii-pic
   (-> (is-a?/c bitmap%) bytes?)
