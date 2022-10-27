@@ -24,7 +24,7 @@
         (bytes-ref t (exact-floor (/ (get-grey-value bytes) gap)))))))
 
 (define/contract make-ascii-pic
-  (-> (is-a? bitmap%) bytes?)
+  (-> (is-a?/c bitmap%) bytes?)
   (lambda (bitmap)
     (let ((w (send bitmap get-width))
           (h (send bitmap get-height))
