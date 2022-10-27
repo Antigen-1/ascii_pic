@@ -1,3 +1,3 @@
 #lang info
 
-(define deps '(draw-lib))
+(define deps '("draw-lib"))
